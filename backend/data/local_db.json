@@ -1,0 +1,132 @@
+{
+  "users": [
+    {
+      "_id": "usr_demo_clinician_001",
+      "name": "Dr. Evelyn Reed, MD",
+      "email": "clinician@omnimedi.ai",
+      "password": "$2a$10$fLM457s/wSp54K0EqMPgfufqnttoIavYFnpMwOdkRuqVcInUYPWjS",
+      "role": "clinician",
+      "organization": "St. Jude Multimodal Diagnostic Center",
+      "preferences": {
+        "theme": "dark",
+        "defaultDomain": "Healthcare",
+        "enableStreaming": true
+      },
+      "createdAt": "2026-10-01T05:06:11.779Z",
+      "updatedAt": "2026-10-01T05:06:11.780Z"
+    },
+    {
+      "_id": "usr_1790831190010_5c25l",
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "$2a$10$hIOcbwpuxujmffiSHat6Hei2Oay7suBvZI4pOQ25AKy74sxh70hde",
+      "role": "clinician",
+      "organization": "Test Clinic",
+      "preferences": {
+        "theme": "dark",
+        "defaultDomain": "Healthcare",
+        "enableStreaming": true
+      },
+      "createdAt": "2026-10-01T05:06:30.010Z",
+      "updatedAt": "2026-10-01T05:06:30.010Z"
+    },
+    {
+      "_id": "usr_1790831228477_6tbaw",
+      "name": "prathmesh vaidya",
+      "email": "prathmeshvaidya789@gmail.com",
+      "password": "$2a$10$DYiM6Ww/bdbpGiAonQCrOOpeRD4nbB.yXAYyhrNM3qhMatgXu6JC6",
+      "role": "clinician",
+      "organization": "St. Jude Multimodal Diagnostic Center",
+      "preferences": {
+        "theme": "dark",
+        "defaultDomain": "Healthcare",
+        "enableStreaming": true
+      },
+      "createdAt": "2026-10-01T05:07:08.477Z",
+      "updatedAt": "2026-10-01T05:07:08.477Z"
+    }
+  ],
+  "sessions": [
+    {
+      "_id": "ses_1790831984456_e3e7r",
+      "title": "blood report",
+      "user": "usr_1790831228477_6tbaw",
+      "workspace": null,
+      "domain": "Healthcare",
+      "files": [
+        {
+          "filename": "1790831984447-147489689-ANIKET-VAIDYA_2606609__1_.pdf",
+          "originalName": "ANIKET-VAIDYA_2606609 (1).pdf",
+          "mimeType": "application/pdf",
+          "size": 0,
+          "path": "C:\\Users\\user\\OneDrive\\Desktop\\Multimodal AI\\backend\\uploads\\1790831984447-147489689-ANIKET-VAIDYA_2606609__1_.pdf",
+          "fileCategory": "document",
+          "uploadDate": "2026-10-01T05:19:44.456Z"
+        }
+      ],
+      "prompt": "complete blood report",
+      "aiAnalysis": {
+        "summary": "Synthesized analysis completed across 1 ingested artifact(s) [document]. The multi-format correlation reveals consistent indicators aligned with the objective \"complete blood report\" with high cross-source correlation.",
+        "keyFindings": [
+          "Document / Text Modality: Identified clinical timeline and structured baseline metrics matching documentation standards.",
+          "Audio Modality: Recorded patient/consultation dialogue highlights symptoms with verbal emphasis not explicitly prioritized in written notes.",
+          "Visual / Imaging Modality: Feature extraction confirms structural alignment and verifies diagnostic markers without focal lesions.",
+          "Cross-modal synchronicity validated: Spoken symptom chronology corroborates radiographic timestamps."
+        ],
+        "crossModalCorrelation": "The verbal consultation recordings provide critical nuance to the static PDF report. While the written report denotes stable parameters, the acoustic consultation reveals episodic exacerbation during exertion. Cross-referencing image data confirms early-stage indicators requiring prophylactic monitoring rather than aggressive intervention.",
+        "riskOrAnomalyAlerts": [
+          "Discrepancy: Spoken dosage in audio recording differs slightly from handwritten prescription note.",
+          "Monitoring Alert: Follow-up required within 14 days to re-verify biomarker panel."
+        ],
+        "recommendedActions": [
+          "Reconcile pharmaceutical dosage between audio recording and written chart.",
+          "Schedule complementary cross-sectional follow-up imaging in 4 weeks.",
+          "Export structured summary directly into Electronic Health Record (EHR/EMR)."
+        ],
+        "confidenceScore": 96,
+        "rawGeminiResponse": "Simulated response active. Configure GEMINI_API_KEY in backend/.env for live Google Gemini 1.5/2.0 API execution."
+      },
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "**Executive Synthesis:**\nSynthesized analysis completed across 1 ingested artifact(s) [document]. The multi-format correlation reveals consistent indicators aligned with the objective \"complete blood report\" with high cross-source correlation.\n\n**Cross-Modal Correlation:**\nThe verbal consultation recordings provide critical nuance to the static PDF report. While the written report denotes stable parameters, the acoustic consultation reveals episodic exacerbation during exertion. Cross-referencing image data confirms early-stage indicators requiring prophylactic monitoring rather than aggressive intervention.",
+          "fileReferences": [
+            "ANIKET-VAIDYA_2606609 (1).pdf"
+          ],
+          "timestamp": "2026-10-01T05:19:44.459Z"
+        },
+        {
+          "role": "user",
+          "content": "What specific dosage was spoken versus written in the patient chart?",
+          "timestamp": "2026-10-01T06:45:25.298Z"
+        },
+        {
+          "role": "assistant",
+          "content": "Based on the cross-modal evaluation of the uploaded files (ANIKET-VAIDYA_2606609 (1).pdf):\n\n1. **Evidence Correlation**: The auditory cues and document markers directly address your query: \"What specific dosage was spoken versus written in the patient chart?\".\n2. **Key Nuance**: In the consultation record, the subject specifically clarifies the onset timeline, confirming that symptoms began 3 days prior to the lab sample collection.\n3. **Recommendation**: Continue monitoring the parameters flagged in the cross-modal synthesis dashboard.\n\n*(Running in demonstration mode: supply your `GEMINI_API_KEY` in `backend/.env` to query Google Gemini live!)*",
+          "fileReferences": [
+            "ANIKET-VAIDYA_2606609 (1).pdf"
+          ],
+          "timestamp": "2026-10-01T06:45:25.321Z"
+        },
+        {
+          "role": "user",
+          "content": "What specific dosage was spoken versus written in the patient chart?",
+          "timestamp": "2026-10-01T06:45:27.550Z"
+        },
+        {
+          "role": "assistant",
+          "content": "Based on the cross-modal evaluation of the uploaded files (ANIKET-VAIDYA_2606609 (1).pdf):\n\n1. **Evidence Correlation**: The auditory cues and document markers directly address your query: \"What specific dosage was spoken versus written in the patient chart?\".\n2. **Key Nuance**: In the consultation record, the subject specifically clarifies the onset timeline, confirming that symptoms began 3 days prior to the lab sample collection.\n3. **Recommendation**: Continue monitoring the parameters flagged in the cross-modal synthesis dashboard.\n\n*(Running in demonstration mode: supply your `GEMINI_API_KEY` in `backend/.env` to query Google Gemini live!)*",
+          "fileReferences": [
+            "ANIKET-VAIDYA_2606609 (1).pdf"
+          ],
+          "timestamp": "2026-10-01T06:45:27.554Z"
+        }
+      ],
+      "status": "completed",
+      "errorMessage": null,
+      "createdAt": "2026-10-01T05:19:44.456Z",
+      "updatedAt": "2026-10-01T06:45:27.573Z"
+    }
+  ],
+  "workspaces": []
+}
