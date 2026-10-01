@@ -1,19 +1,14 @@
 import React, { useEffect } from 'react';
 import { X, FileText, Music, Image as ImageIcon, Video, FileCheck, ExternalLink } from 'lucide-react';
+import { getUploadUrl } from '../utils/mediaUrl';
 
 const SourcePreviewDrawer = ({ file, sessionFiles = [], onClose }) => {
   const fileMeta = sessionFiles.find(
     (f) => f.originalName === file || f.filename === file
   );
 
-  const getMediaUrl = (path) => {
-    if (!path) return '';
-    const filename = path.split('\\').pop().split('/').pop();
-    return `/uploads/${filename}`;
-  };
-
   const category = fileMeta?.fileCategory || 'other';
-  const mediaUrl = fileMeta ? getMediaUrl(fileMeta.path) : '';
+  const mediaUrl = fileMeta ? getUploadUrl(fileMeta.path) : '';
 
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onClose(); };

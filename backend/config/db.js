@@ -13,10 +13,8 @@ export const connectDB = async () => {
     console.error(`Error details: ${error.message}`);
     console.warn(`[MongoDB Note] Ensure MongoDB is running locally (e.g., mongod) or configure MONGODB_URI with a MongoDB Atlas cloud connection string in backend/.env.`);
     
-    // In production, we typically fail fast. In local dev, continue so API routes can output descriptive errors.
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
-    }
+    // In production and dev, log the error rather than hard exiting so the web server can still serve health checks
+    console.warn(`[MongoDB Notice] Server started without active DB connection. Database operations will retry upon incoming requests.`);
   }
 };
 

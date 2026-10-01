@@ -22,20 +22,27 @@ const app = express();
 connectDB();
 
 // CORS configuration
+// CLIENT_ORIGIN can be a comma-separated list of allowed origins, e.g.:
+//   https://mediomni.vercel.app,https://www.mediomni.ai
+const rawOrigins = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 const allowedOrigins = [
-  process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  ...rawOrigins.split(',').map((o) => o.trim()),
   'http://localhost:3000',
+  'http://localhost:5173',
   'http://127.0.0.1:5173',
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
+      // Allow requests with no origin (curl, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // In production, only allow listed origins
+      if (process.env.NODE_ENV === 'production') {
+        return callback(new Error(`CORS: origin ${origin} not allowed`), false);
       }
-      return callback(null, true); // Permissive in dev, replace with strict whitelist in prod
+      return callback(null, true); // Permissive in dev
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -130,10 +137,11 @@ app.use((err, req, res, next) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`===============================================`);
-  console.log(`  Multimodal AI Server running on port ${PORT}`);
-  console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`  API Base URL: http://localhost:${PORT}/api`);
+  console.log(`  MediOmni AI Backend running on port ${PORT}`);
+  console.log(`  Environment : ${process.env.NODE_ENV || 'development'}`);
+  console.log(`  API Base URL: http://0.0.0.0:${PORT}/api`);
+  console.log(`  Health Check: http://0.0.0.0:${PORT}/api/health`);
   console.log(`===============================================`);
 });

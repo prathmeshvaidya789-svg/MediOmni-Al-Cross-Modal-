@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: mediomni-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false          # Set this in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure secret
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: GEMINI_API_KEY
+        sync: false          # Set this in Render dashboard
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: CLIENT_ORIGIN
+        sync: false          # Set to your Vercel frontend URL after deploy
+      - key: MAX_FILE_SIZE_MB
+        value: 25
+      - key: MAX_FILES_COUNT
+        value: 10
+    healthCheckPath: /api/health
+    autoDeploy: true

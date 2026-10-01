@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Activity,
 } from 'lucide-react';
+import { getUploadUrl } from '../utils/mediaUrl';
 import ConfidenceModal from './ConfidenceModal';
 import ExportReportButton from './ExportReportButton';
 import { SynthesisSkeleton } from './SkeletonLoader';
@@ -64,11 +65,7 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const getMediaUrl = (path) => {
-    if (!path) return '';
-    const filename = path.split('\\').pop().split('/').pop();
-    return `/uploads/${filename}`;
-  };
+  const getMediaUrl = (path) => getUploadUrl(path);
 
   return (
     <div className="w-full space-y-6 animate-fade-in">
