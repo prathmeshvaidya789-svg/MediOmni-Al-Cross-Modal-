@@ -68,7 +68,7 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
   const getMediaUrl = (path) => {
     if (!path) return '';
     const filename = path.split('\\').pop().split('/').pop();
-    return `http://localhost:5000/uploads/${filename}`;
+    return `/uploads/${filename}`;
   };
 
   return (

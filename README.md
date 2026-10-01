@@ -111,44 +111,59 @@ Multimodal AI/
 
 Before running the application, ensure you have:
 1. **Node.js**: Version 18.0.0 or higher.
-2. **MongoDB**: A running local MongoDB instance (`mongodb://localhost:27017/multimodal_ai`) OR a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster URI.
-3. **Google Gemini API Key**: Free key obtainable from [Google AI Studio](https://aistudio.google.com/).
+2. **MongoDB** *(Optional)*: Local MongoDB or MongoDB Atlas URI. *If MongoDB is not installed, the platform automatically uses a built-in zero-config local JSON database fallback.*
+3. **Google Gemini API Key** *(Optional for dev)*: Free key obtainable from [Google AI Studio](https://aistudio.google.com/). *If omitted, realistic simulated multimodal synthesis runs automatically.*
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## 🚀 Quick Start (Linked Frontend & Backend at One Place)
 
-### 1. Clone & Environment Setup
+You can run both Frontend and Backend together with a single unified command from the project root!
 
-#### Configure Backend
-```bash
-cd backend
-cp .env.example .env
-```
-Edit `backend/.env` with your credentials:
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/multimodal_ai
-JWT_SECRET=your_super_secret_jwt_key_min_32_characters
-GEMINI_API_KEY=AIzaSyYourActualGeminiApiKeyFromGoogleAIStudio
-GEMINI_MODEL=gemini-1.5-flash
-CLIENT_ORIGIN=http://localhost:5173
-```
+### Option 1: Unified Single-Command Development (Recommended)
 
-#### Configure Frontend
-```bash
-cd ../frontend
-cp .env.example .env
-```
-Ensure `frontend/.env` contains:
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
+1. **Install dependencies across both packages:**
+   ```bash
+   npm run setup
+   ```
+
+2. **Configure Backend Environment:**
+   Create or edit `backend/.env`:
+   ```env
+   PORT=5000
+   NODE_ENV=development
+   JWT_SECRET=your_super_secret_jwt_key_min_32_characters
+   GEMINI_API_KEY=AIzaSyYourActualGeminiApiKeyFromGoogleAIStudio
+   GEMINI_MODEL=gemini-1.5-flash
+   CLIENT_ORIGIN=http://localhost:5173
+   ```
+
+3. **Start both Backend and Frontend concurrently:**
+   ```bash
+   npm run dev
+   ```
+   * 🌐 **Frontend UI:** [http://localhost:5173](http://localhost:5173) (with live Vite HMR)
+   * ⚙️ **Backend API:** [http://localhost:5000](http://localhost:5000)
 
 ---
 
-### 2. Install Dependencies & Run
+### Option 2: Unified Production Mode (Single Port 5000)
+
+Run the entire application (both React UI and Express API) on a single port:
+
+```bash
+# 1. Build frontend into static production bundle
+npm run build
+
+# 2. Start unified server
+npm start
+```
+
+👉 Access the complete application at **`http://localhost:5000`** (Express serves the React client and all API endpoints from the same origin).
+
+---
+
+### Option 3: Separate Terminals
 
 #### Terminal 1 — Backend:
 ```bash
@@ -156,7 +171,6 @@ cd backend
 npm install
 npm run dev
 ```
-*The backend will boot up at `http://localhost:5000` and connect to MongoDB.*
 
 #### Terminal 2 — Frontend:
 ```bash
@@ -164,7 +178,6 @@ cd frontend
 npm install
 npm run dev
 ```
-*The frontend will run at `http://localhost:5173`.*
 
 ---
 

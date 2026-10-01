@@ -65,16 +65,30 @@ app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 
-// Root Welcome Endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to the Multimodal AI API Gateway',
-    documentation: '/api/health',
-    status: 'active',
+// Serve frontend production build assets
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDistPath));
+
+// Client-side SPA routing fallback for non-API routes
+app.get('*', (req, res, next) => {
+  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
+    return next();
+  }
+  const indexPath = path.join(frontendDistPath, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      // If frontend hasn't been built yet, show helpful gateway info
+      res.status(200).json({
+        message: 'Welcome to the MediOmni AI API Gateway',
+        status: 'active',
+        health: '/api/health',
+        notice: 'Frontend build not detected. Run "npm run build" to build and serve the client here, or access Vite dev server on http://localhost:5173',
+      });
+    }
   });
 });
 
-// 404 Route Handler
+// 404 Route Handler for unmatched API endpoints
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,

@@ -14,7 +14,7 @@ const SourcePreviewDrawer = ({ file, sessionFiles = [], onClose }) => {
   const getMediaUrl = (path) => {
     if (!path) return '';
     const filename = path.split('\\').pop().split('/').pop();
-    return `http://localhost:5000/uploads/${filename}`;
+    return `/uploads/${filename}`;
   };
 
   const category = fileMeta?.fileCategory || 'other';
