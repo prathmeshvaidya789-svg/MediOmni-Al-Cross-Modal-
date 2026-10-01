@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { HeartPulse, Lock, Mail, User, Building2, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { HeartPulse, Lock, Mail, User, Building2, AlertCircle, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,16 @@ const RegisterPage = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleQuickDemoFill = () => {
+    setFormData({
+      name: 'Dr. Evelyn Reed, MD',
+      email: 'evelyn.reed@hospital.org',
+      password: 'Password123!',
+      organization: 'St. Jude Multimodal Diagnostic Center',
+      role: 'clinician',
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -96,7 +106,7 @@ const RegisterPage = () => {
             </h1>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: '#0F172A' }}>Create Account</h2>
             <p className="text-sm mt-1" style={{ color: '#64748B' }}>
               Register as a verified clinical practitioner
@@ -106,6 +116,21 @@ const RegisterPage = () => {
           {/* Card */}
           <div className="bg-white rounded-2xl p-8 space-y-4"
             style={{ border: '1px solid #E2E8F0', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+
+            {/* Quick Demo Fill */}
+            <button
+              type="button"
+              onClick={handleQuickDemoFill}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold transition-all"
+              style={{
+                background: '#F0FDFA',
+                color: '#0D9488',
+                border: '1px solid #99F6E4',
+              }}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Auto-fill Demo Practitioner Info
+            </button>
 
             {error && (
               <div className="flex items-center gap-2 text-xs p-3 rounded-xl"
