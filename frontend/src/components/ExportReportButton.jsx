@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileText, Check, Loader2, X, ChevronDown } from 'lucide-react';
+import { Download, FileText, Check, Loader2, ChevronDown } from 'lucide-react';
 
 /**
  * ExportReportButton – Compiles the session into a formatted clinical
@@ -106,7 +106,6 @@ ${fileList || '  - No files attached (prompt-only session)'}
     setExporting('pdf');
     setIsOpen(false);
     setTimeout(() => {
-      // Build a print-friendly HTML in a new window
       const md = buildMarkdown();
       const html = `<!DOCTYPE html>
 <html lang="en">
@@ -114,9 +113,9 @@ ${fileList || '  - No files attached (prompt-only session)'}
 <meta charset="UTF-8"/>
 <title>${session.title || 'MediOmni Report'}</title>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px; max-width: 820px; margin: 0 auto; color: #1a202c; line-height: 1.7; }
-  h1 { color: #0891b2; font-size: 1.6rem; margin-bottom: 4px; }
-  h2 { color: #1e40af; font-size: 1.1rem; margin-top: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif; padding: 40px; max-width: 820px; margin: 0 auto; color: #1a202c; line-height: 1.7; background: #F8FAFC; }
+  h1 { color: #0284C7; font-size: 1.6rem; margin-bottom: 4px; }
+  h2 { color: #0D9488; font-size: 1.1rem; margin-top: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
   blockquote { background: #f0fdf4; border-left: 4px solid #10b981; padding: 8px 16px; border-radius: 4px; color: #065f46; font-size: 0.85rem; }
   code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
   hr { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
@@ -138,53 +137,108 @@ ${fileList || '  - No files attached (prompt-only session)'}
     }, 500);
   };
 
+  const triggerStyle = {
+    background: done ? '#ECFDF5' : '#FFFFFF',
+    border: done ? '1.5px solid #6EE7B7' : '1px solid #E2E8F0',
+    color: done ? '#059669' : '#374151',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+    borderRadius: '12px',
+    padding: '7px 14px',
+    fontSize: '12px',
+    fontWeight: 600,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    whiteSpace: 'nowrap',
+  };
+
   return (
     <div className="relative">
-      {/* Main trigger button */}
+      {/* Main trigger */}
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
-          done
-            ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
-            : 'bg-dark-800 border-white/10 text-slate-200 hover:border-white/25 hover:bg-dark-700'
-        }`}
+        style={triggerStyle}
+        onMouseEnter={(e) => {
+          if (!done) {
+            e.currentTarget.style.background = '#F0F9FF';
+            e.currentTarget.style.borderColor = '#BAE6FD';
+            e.currentTarget.style.color = '#0284C7';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!done) {
+            e.currentTarget.style.background = '#FFFFFF';
+            e.currentTarget.style.borderColor = '#E2E8F0';
+            e.currentTarget.style.color = '#374151';
+          }
+        }}
       >
         {exporting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : done ? (
-          <Check className="w-3.5 h-3.5 text-emerald-400" />
+          <Check className="w-3.5 h-3.5" />
         ) : (
           <Download className="w-3.5 h-3.5" />
         )}
         <span>{done ? 'Exported!' : 'Export Report'}</span>
-        {!done && !exporting && <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />}
+        {!done && !exporting && (
+          <ChevronDown
+            className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          />
+        )}
       </button>
 
       {/* Dropdown */}
       {isOpen && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 z-40 glass-panel rounded-xl border border-white/15 shadow-2xl w-56 overflow-hidden animate-scale-in">
+          <div
+            className="absolute right-0 top-full mt-2 z-40 w-56 overflow-hidden"
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: '14px',
+              boxShadow: '0 8px 28px rgba(0,0,0,0.12)',
+            }}
+          >
             <div className="p-2 space-y-1">
               <button
                 onClick={downloadMarkdown}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-slate-200 hover:bg-white/5 hover:text-white transition-colors text-left"
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs text-left transition-all"
+                style={{ color: '#374151' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#F0F9FF')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
-                <FileText className="w-4 h-4 text-brand-cyan" />
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#DBEAFE' }}
+                >
+                  <FileText className="w-3.5 h-3.5" style={{ color: '#0284C7' }} />
+                </div>
                 <div>
-                  <p className="font-semibold">Download Markdown</p>
-                  <p className="text-[10px] text-slate-400">Structured .md clinical summary</p>
+                  <p className="font-semibold" style={{ color: '#0F172A' }}>Download Markdown</p>
+                  <p style={{ color: '#94A3B8' }}>Structured .md clinical summary</p>
                 </div>
               </button>
 
               <button
                 onClick={printAsPDF}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-slate-200 hover:bg-white/5 hover:text-white transition-colors text-left"
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs text-left transition-all"
+                style={{ color: '#374151' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#F0FDF4')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
-                <Download className="w-4 h-4 text-indigo-400" />
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#D1FAE5' }}
+                >
+                  <Download className="w-3.5 h-3.5" style={{ color: '#059669' }} />
+                </div>
                 <div>
-                  <p className="font-semibold">Save as PDF</p>
-                  <p className="text-[10px] text-slate-400">Print-to-PDF via browser dialog</p>
+                  <p className="font-semibold" style={{ color: '#0F172A' }}>Save as PDF</p>
+                  <p style={{ color: '#94A3B8' }}>Print-to-PDF via browser dialog</p>
                 </div>
               </button>
             </div>

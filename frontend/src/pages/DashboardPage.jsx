@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import HealthcareHero from '../components/HealthcareHero';
 import FileUploader from '../components/FileUploader';
 import InsightsDisplay from '../components/InsightsDisplay';
 import ChatInterface from '../components/ChatInterface';
@@ -14,6 +15,8 @@ import {
   CheckCircle,
   Loader2,
   AlertCircle,
+  ShieldCheck,
+  Activity,
 } from 'lucide-react';
 
 const DashboardPage = () => {
@@ -24,15 +27,15 @@ const DashboardPage = () => {
   const [viewMode, setViewMode] = useState('insights'); // 'upload' or 'insights'
   const [processingStep, setProcessingStep] = useState(0);
   const [globalError, setGlobalError] = useState(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(false);
+  const [selectedQuickCase, setSelectedQuickCase] = useState(null);
 
   const processingSteps = [
-    'Securely transmitting multipart/form-data artifacts to backend...',
-    'Extracting visual, acoustic, and document embeddings...',
-    'Performing cross-modal correlation with Google Gemini 1.5...',
-    'Finalizing diagnostic recommendations and structuring output...',
+    'Transmitting encrypted clinical artifacts to Gemini 1.5 pipeline...',
+    'Extracting visual features, consultation acoustic cues, and PDF entities...',
+    'Performing cross-modal concordance correlation & anomaly detection...',
+    'Synthesizing diagnostic recommendations & clinical decision support...',
   ];
-
-  const [isLoadingSession, setIsLoadingSession] = useState(false);
 
   // Fetch past sessions on initial mount
   useEffect(() => {
@@ -68,7 +71,7 @@ const DashboardPage = () => {
       }
     } catch (err) {
       console.error('[Load Session Error]:', err);
-      setGlobalError('Failed to load the selected session.');
+      setGlobalError('Failed to load the selected clinical session.');
     } finally {
       setIsLoadingSession(false);
     }
@@ -100,7 +103,7 @@ const DashboardPage = () => {
       clearInterval(interval);
       console.error('[Processing Error]:', err);
       setGlobalError(
-        err.response?.data?.message || 'Multimodal processing failed. Please check your file inputs.'
+        err.response?.data?.message || 'Multimodal clinical processing failed. Please check your file inputs.'
       );
     } finally {
       setIsProcessing(false);
@@ -135,55 +138,67 @@ const DashboardPage = () => {
     }
   };
 
+  const handleScrollToUploader = () => {
+    const el = document.getElementById('multimodal-uploader');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSelectQuickCase = (caseItem) => {
+    setSelectedQuickCase(caseItem);
+    handleScrollToUploader();
+  };
+
   return (
-    <div className="min-h-screen bg-dark-900 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans">
       {/* Navbar */}
       <Navbar onNewSession={() => setViewMode('upload')} />
 
       {/* Main Workspace Subheader */}
-      <div className="border-b border-white/5 bg-dark-800/40 px-4 sm:px-6 lg:px-8 py-3.5">
+      <div className="border-b border-slate-200 bg-white/70 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3 sticky top-16 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2.5">
             <button
               onClick={() => setViewMode('upload')}
-              className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 viewMode === 'upload'
-                  ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan font-bold'
-                  : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                  ? 'bg-sky-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <UploadCloud className="w-3.5 h-3.5" />
-              <span>Ingest Media</span>
+              <UploadCloud className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Ingest Case</span>
             </button>
 
             {activeSession && (
               <button
                 onClick={() => setViewMode('insights')}
-                className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   viewMode === 'insights'
-                    ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan font-bold'
-                    : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                    ? 'bg-sky-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Active Case View</span>
+                <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Active Clinical Case</span>
               </button>
             )}
           </div>
 
           <div className="flex items-center space-x-3">
-            <span className="hidden md:flex items-center space-x-1.5 text-[11px] text-slate-400 font-mono">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Backend Status: Online</span>
+            <span className="hidden md:flex items-center space-x-1.5 text-xs text-slate-500 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Gemini Decision Engine: <strong className="text-slate-700">Online</strong></span>
             </span>
 
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 border border-white/10 text-xs font-medium transition-colors"
+              className="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold transition-all shadow-xs"
             >
-              <History className="w-3.5 h-3.5 text-brand-cyan" />
-              <span>History ({sessions.length})</span>
+              <History className="w-3.5 h-3.5 text-sky-600" />
+              <span>Case History ({sessions.length})</span>
             </button>
           </div>
 
@@ -193,14 +208,14 @@ const DashboardPage = () => {
       {/* Global Error Banner */}
       {globalError && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
-          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center justify-between shadow-xs">
             <div className="flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{globalError}</span>
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
+              <span className="font-semibold">{globalError}</span>
             </div>
             <button
               onClick={() => setGlobalError(null)}
-              className="text-rose-400 hover:text-white text-xs ml-4"
+              className="text-rose-600 hover:text-rose-800 text-xs font-bold ml-4"
             >
               Dismiss
             </button>
@@ -213,18 +228,18 @@ const DashboardPage = () => {
         
         {/* Processing Modal / Progress Overlay */}
         {isProcessing && (
-          <div className="fixed inset-0 z-50 bg-dark-900/80 backdrop-blur-md flex items-center justify-center p-4">
-            <div className="glass-panel p-8 rounded-2xl max-w-md w-full border border-brand-cyan/40 shadow-glow-cyan text-center space-y-5">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-cyan to-brand-blue flex items-center justify-center mx-auto shadow-lg animate-pulse">
-                <Sparkles className="w-8 h-8 text-dark-900 stroke-[2.5]" />
+          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white p-8 rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl text-center space-y-5 animate-scale-in">
+              <div className="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center mx-auto shadow-sm">
+                <Activity className="w-8 h-8 text-sky-600 animate-pulse stroke-[2.5]" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Synthesizing Multimodal Knowledge</h3>
-                <p className="text-xs text-slate-400 mt-1">Cross-referencing audio, visual, and textual modalities</p>
+                <h3 className="text-lg font-bold text-slate-900">Synthesizing Multimodal Clinical Data</h3>
+                <p className="text-xs text-slate-500 mt-1">Cross-referencing audio dictation, radiology imaging, and laboratory PDFs</p>
               </div>
 
               {/* Progress step checklist */}
-              <div className="space-y-2 text-left bg-dark-800/80 p-4 rounded-xl border border-white/5">
+              <div className="space-y-2.5 text-left bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
                 {processingSteps.map((step, idx) => {
                   const isDone = processingStep > idx;
                   const isCurrent = processingStep === idx;
@@ -233,18 +248,18 @@ const DashboardPage = () => {
                       key={idx}
                       className={`flex items-center space-x-2.5 text-xs transition-colors ${
                         isDone
-                          ? 'text-emerald-400 font-medium'
+                          ? 'text-emerald-700 font-semibold'
                           : isCurrent
-                          ? 'text-brand-cyan font-bold animate-pulse'
-                          : 'text-slate-500'
+                          ? 'text-sky-700 font-bold'
+                          : 'text-slate-400'
                       }`}
                     >
                       {isDone ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                       ) : isCurrent ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-brand-cyan flex-shrink-0" />
+                        <Loader2 className="w-4 h-4 animate-spin text-sky-600 flex-shrink-0" />
                       ) : (
-                        <div className="w-4 h-4 rounded-full border border-slate-600 flex-shrink-0" />
+                        <div className="w-4 h-4 rounded-full border border-slate-300 flex-shrink-0" />
                       )}
                       <span>{step}</span>
                     </div>
@@ -257,19 +272,19 @@ const DashboardPage = () => {
 
         {/* View Mode Switching */}
         {viewMode === 'upload' ? (
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="text-center space-y-2 mb-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Multimodal Ingestion & Cross-Modal Synthesis
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-                Upload handwritten clinical notes, doctor audio recordings, radiology scans, and laboratory PDFs for unified synthesis via Google Gemini.
-              </p>
-            </div>
+          <div className="max-w-5xl mx-auto space-y-6">
+            
+            {/* Healthcare Hero Section with Metrics and Quick Presets */}
+            <HealthcareHero
+              onSelectQuickCase={handleSelectQuickCase}
+              onScrollToUploader={handleScrollToUploader}
+            />
 
+            {/* Ingestion Component */}
             <FileUploader
               onProcessStart={handleProcessStart}
               isProcessing={isProcessing}
+              initialCase={selectedQuickCase}
             />
           </div>
         ) : (
@@ -284,11 +299,11 @@ const DashboardPage = () => {
                   isLoading={isLoadingSession}
                 />
               ) : (
-                <div className="glass-panel p-12 text-center rounded-2xl border border-white/10">
-                  <p className="text-sm text-slate-400">No active session selected.</p>
+                <div className="bg-white p-12 text-center rounded-3xl border border-slate-200 shadow-sm">
+                  <p className="text-sm font-semibold text-slate-600">No active clinical session selected.</p>
                   <button
                     onClick={() => setViewMode('upload')}
-                    className="mt-4 px-4 py-2 bg-brand-cyan text-dark-900 rounded-xl text-xs font-bold"
+                    className="mt-4 px-5 py-2.5 btn-blue-cta rounded-xl text-xs font-bold"
                   >
                     Ingest Artifacts Now
                   </button>
@@ -297,7 +312,7 @@ const DashboardPage = () => {
             </div>
 
             {/* Right Column (40%): Interactive Multi-Turn Chat Copilot */}
-            <div className="lg:col-span-5 sticky top-20">
+            <div className="lg:col-span-5 sticky top-28">
               <ChatInterface
                 session={activeSession}
                 sessionFiles={activeSession?.files}

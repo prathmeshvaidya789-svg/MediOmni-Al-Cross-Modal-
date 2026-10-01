@@ -6,13 +6,12 @@ import {
   ArrowRightCircle,
   Copy,
   Check,
-  Share2,
   BarChart2,
   FileCheck,
   ShieldAlert,
   Compass,
   ExternalLink,
-  Info,
+  Activity,
 } from 'lucide-react';
 import ConfidenceModal from './ConfidenceModal';
 import ExportReportButton from './ExportReportButton';
@@ -41,11 +40,11 @@ const InsightsDisplay = ({ session, isLoading = false }) => {
   } = session.aiAnalysis;
 
   const handleCopySummary = () => {
-    const reportText = `=== ${session.title || 'Multimodal Synthesis'} ===
-Domain: ${session.domain || 'General'}
-Confidence: ${confidenceScore}%
+    const reportText = `=== ${session.title || 'Clinical Multimodal Synthesis'} ===
+Domain: ${session.domain || 'Clinical / Healthcare'}
+Confidence Score: ${confidenceScore}%
 
-[EXECUTIVE SUMMARY]
+[EXECUTIVE CLINICAL SUMMARY]
 ${summary}
 
 [CROSS-MODAL CORRELATION]
@@ -72,24 +71,25 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 animate-fade-in">
       
-      {/* Top Banner: Executive Summary & Confidence Gauge */}
-      <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Top Banner: Executive Clinical Synthesis & Confidence Score */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* Subtle decorative medical ambient gradient */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-sky-100/60 to-teal-50/40 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200/90 relative z-10">
           <div>
             <div className="flex items-center space-x-2.5">
-              <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/40 font-bold">
-                {session.domain} Intelligence
+              <span className="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 tracking-wider">
+                {session.domain || 'Clinical'} Intelligence
               </span>
-              <span className="text-xs text-slate-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse" />
-                Processed {session.files?.length || 0} multimodal artifact(s)
+              <span className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Cross-referenced {session.files?.length || 0} multimodal artifact(s)
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1.5 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1.5 tracking-tight">
               {session.title || 'Multimodal Synthesis Report'}
             </h2>
           </div>
@@ -101,16 +101,16 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
               <button
                 type="button"
                 onClick={() => setShowConfidenceModal(true)}
-                className="flex items-center space-x-2 bg-dark-800/90 hover:bg-dark-700/90 border border-emerald-400/30 hover:border-emerald-400/60 px-3.5 py-1.5 rounded-xl transition-all group cursor-pointer shadow-sm hover:shadow-glow-cyan"
+                className="flex items-center space-x-2.5 bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200 px-3.5 py-1.5 rounded-xl transition-all group cursor-pointer shadow-xs"
               >
                 <div className="text-right">
-                  <span className="text-[10px] text-slate-400 group-hover:text-slate-300 uppercase tracking-wider block font-semibold">
+                  <span className="text-[10px] text-emerald-800 uppercase tracking-wider block font-bold">
                     Confidence
                   </span>
-                  <span className="text-xs font-mono font-bold text-emerald-400">{confidenceScore}%</span>
+                  <span className="text-xs font-mono font-black text-emerald-700">{confidenceScore}%</span>
                 </div>
-                <div className="w-8 h-8 rounded-full border-2 border-emerald-400/40 flex items-center justify-center bg-emerald-400/10 group-hover:scale-105 transition-transform">
-                  <BarChart2 className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-full border border-emerald-300 flex items-center justify-center bg-white shadow-xs group-hover:scale-105 transition-transform">
+                  <BarChart2 className="w-4 h-4 text-emerald-600" />
                 </div>
               </button>
               <div className="tooltip-content -bottom-9 right-0 w-52 text-center z-20">
@@ -124,22 +124,22 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
             {/* Quick Copy Button */}
             <button
               onClick={handleCopySummary}
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 border border-white/10 hover:border-white/25 text-xs font-medium transition-colors"
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300 text-xs font-semibold transition-colors shadow-xs"
               title="Copy plain-text summary"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
               <span>{copied ? 'Copied' : 'Copy'}</span>
             </button>
           </div>
         </div>
 
         {/* Executive Summary Narrative */}
-        <div className="mt-5">
-          <div className="flex items-center space-x-2 mb-2 text-brand-cyan">
-            <Sparkles className="w-4 h-4" />
-            <h3 className="text-xs font-bold uppercase tracking-wider">Executive Synthesis</h3>
+        <div className="mt-5 relative z-10">
+          <div className="flex items-center space-x-2 mb-2 text-sky-700">
+            <Activity className="w-4 h-4" />
+            <h3 className="text-xs font-extrabold uppercase tracking-wider">Executive Clinical Synthesis</h3>
           </div>
-          <p className="text-sm text-slate-200 leading-relaxed font-sans bg-dark-800/50 p-4 rounded-xl border border-white/5">
+          <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-sans bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80">
             {summary}
           </p>
         </div>
@@ -147,15 +147,15 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
       </div>
 
       {/* Structured Multi-Tab Navigation */}
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 shadow-xl">
-        <div className="flex items-center space-x-2 border-b border-white/10 pb-4 overflow-x-auto no-scrollbar">
+      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div className="flex items-center space-x-2 border-b border-slate-200 pb-4 overflow-x-auto no-scrollbar">
           
           <button
             onClick={() => setActiveTab('correlation')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'correlation'
-                ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan'
-                : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
@@ -164,10 +164,10 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
 
           <button
             onClick={() => setActiveTab('findings')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'findings'
-                ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan'
-                : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -176,22 +176,22 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
 
           <button
             onClick={() => setActiveTab('risks')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'risks'
-                ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                ? 'bg-rose-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
-            <span>Risk & Discrepancies ({riskOrAnomalyAlerts.length})</span>
+            <span>Risk & Contradictions ({riskOrAnomalyAlerts.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('actions')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'actions'
-                ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan'
-                : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <ArrowRightCircle className="w-3.5 h-3.5" />
@@ -200,10 +200,10 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
 
           <button
             onClick={() => setActiveTab('media')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'media'
-                ? 'bg-brand-cyan text-dark-900 shadow-glow-cyan'
-                : 'text-slate-400 hover:text-white hover:bg-dark-800'
+                ? 'bg-sky-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <FileCheck className="w-3.5 h-3.5" />
@@ -212,26 +212,26 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
 
         </div>
 
-        {/* Tab Content Panels with slide-in animation */}
+        {/* Tab Content Panels */}
         <div key={activeTab} className="mt-6 animate-slide-up">
 
           {/* TAB 1: Cross-Modal Correlation */}
           {activeTab === 'correlation' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-dark-800/60 border border-white/5 space-y-3">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                  <Compass className="w-4 h-4 text-brand-cyan" />
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2.5">
+                <h4 className="text-xs font-bold text-sky-800 uppercase tracking-wider flex items-center space-x-2">
+                  <Compass className="w-4 h-4 text-sky-600" />
                   <span>Synthesized Multi-Modal Narrative</span>
                 </h4>
-                <p className="text-sm text-slate-200 leading-relaxed font-sans whitespace-pre-line">
+                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-sans whitespace-pre-line">
                   {crossModalCorrelation || 'No cross-modal discrepancies detected across provided files.'}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-brand-cyan/5 border border-brand-cyan/20 flex items-start space-x-3">
-                <Sparkles className="w-4 h-4 text-brand-cyan flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-slate-300 leading-normal">
-                  <strong className="text-brand-cyan">Multimodal Fusion Principle:</strong> Visual features from imaging and acoustic cues from consultation recordings are mapped into a unified semantic space by Gemini, ensuring diagnostic accuracy and cross-referencing anomalies.
+              <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 flex items-start space-x-3">
+                <Sparkles className="w-4 h-4 text-teal-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-teal-900 leading-relaxed">
+                  <strong className="text-teal-800 font-bold">Multimodal Fusion Principle:</strong> Visual features from imaging and acoustic cues from consultation recordings are mapped into a unified semantic space by Gemini, verifying diagnostic alignment and highlighting contradictions.
                 </p>
               </div>
             </div>
@@ -241,17 +241,17 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
           {activeTab === 'findings' && (
             <div className="space-y-3">
               {keyFindings.length === 0 ? (
-                <p className="text-sm text-slate-400">No discrete findings logged.</p>
+                <p className="text-xs text-slate-500">No discrete findings logged.</p>
               ) : (
                 keyFindings.map((finding, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start space-x-3 p-3.5 rounded-xl bg-dark-800/60 border border-white/5 hover:border-white/15 transition-all"
+                    className="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-sky-300 transition-all card-lift"
                   >
-                    <div className="w-6 h-6 rounded-lg bg-brand-cyan/15 text-brand-cyan flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">
+                    <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">
                       {idx + 1}
                     </div>
-                    <p className="text-sm text-slate-200 leading-relaxed font-sans">{finding}</p>
+                    <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-sans">{finding}</p>
                   </div>
                 ))
               )}
@@ -262,20 +262,20 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
           {activeTab === 'risks' && (
             <div className="space-y-3">
               {riskOrAnomalyAlerts.length === 0 ? (
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4" />
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center space-x-2 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   <span>No critical contradictions or contraindications detected across ingested files.</span>
                 </div>
               ) : (
                 riskOrAnomalyAlerts.map((alert, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start space-x-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-200 text-sm leading-relaxed"
+                    className="flex items-start space-x-3 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs sm:text-sm leading-relaxed"
                   >
-                    <ShieldAlert className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+                    <ShieldAlert className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <strong className="block text-rose-300 font-semibold mb-0.5">Alert Flag #{idx + 1}</strong>
-                      <p className="text-slate-200 text-xs sm:text-sm">{alert}</p>
+                      <strong className="block text-rose-800 font-bold mb-0.5">Alert Flag #{idx + 1}</strong>
+                      <p className="text-rose-900 text-xs sm:text-sm">{alert}</p>
                     </div>
                   </div>
                 ))
@@ -287,17 +287,17 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
           {activeTab === 'actions' && (
             <div className="space-y-2.5">
               {recommendedActions.length === 0 ? (
-                <p className="text-sm text-slate-400">No explicit next steps generated.</p>
+                <p className="text-xs text-slate-500">No explicit next steps generated.</p>
               ) : (
                 recommendedActions.map((action, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center space-x-3 p-3.5 rounded-xl bg-dark-800/80 border border-white/5 hover:border-brand-cyan/30 transition-all"
+                    className="flex items-center space-x-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-teal-300 transition-all card-lift"
                   >
-                    <div className="w-5 h-5 rounded-md border border-slate-600 flex items-center justify-center text-brand-cyan flex-shrink-0">
+                    <div className="w-5 h-5 rounded-md border border-slate-300 flex items-center justify-center text-teal-600 flex-shrink-0 bg-white">
                       <ArrowRightCircle className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-sm text-slate-200">{action}</span>
+                    <span className="text-xs sm:text-sm text-slate-800 font-medium">{action}</span>
                   </div>
                 ))
               )}
@@ -310,21 +310,21 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
               {session.files?.map((file, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl bg-dark-800/90 border border-white/5 space-y-3 flex flex-col justify-between hover:border-white/15 transition-all"
+                  className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 flex flex-col justify-between hover:border-slate-300 transition-all card-lift"
                 >
                   <div>
-                    <div className="flex items-center space-x-2 text-xs font-mono text-brand-cyan mb-1.5 uppercase font-semibold">
-                      <span>{file.fileCategory}</span>
+                    <div className="flex items-center space-x-2 text-[10px] font-mono text-sky-700 mb-1.5 uppercase font-bold">
+                      <span className="bg-sky-100 px-1.5 py-0.5 rounded">{file.fileCategory}</span>
                       <span>•</span>
                       <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
                     </div>
-                    <p className="text-xs font-semibold text-white truncate" title={file.originalName}>
+                    <p className="text-xs font-bold text-slate-900 truncate" title={file.originalName}>
                       {file.originalName}
                     </p>
                   </div>
 
                   {file.fileCategory === 'image' && (
-                    <div className="h-32 rounded-lg overflow-hidden bg-dark-900 border border-white/5">
+                    <div className="h-32 rounded-xl overflow-hidden bg-white border border-slate-200">
                       <img
                         src={getMediaUrl(file.path)}
                         alt={file.originalName}
@@ -334,7 +334,7 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
                   )}
 
                   {file.fileCategory === 'audio' && (
-                    <div className="p-2 rounded-lg bg-dark-900 border border-white/5">
+                    <div className="p-2 rounded-xl bg-white border border-slate-200">
                       <audio controls className="w-full h-8" src={getMediaUrl(file.path)}>
                         Your browser does not support the audio element.
                       </audio>
@@ -345,9 +345,9 @@ ${recommendedActions.map((r, i) => `> ${r}`).join('\n')}
                     href={getMediaUrl(file.path)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[11px] font-medium text-brand-cyan hover:underline flex items-center space-x-1"
+                    className="text-[11px] font-bold text-sky-700 hover:text-sky-900 flex items-center space-x-1"
                   >
-                    <span>View raw source</span>
+                    <span>View raw artifact</span>
                     <ExternalLink className="w-3 h-3 ml-1" />
                   </a>
                 </div>
