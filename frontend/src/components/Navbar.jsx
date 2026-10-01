@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   FolderOpen,
 } from 'lucide-react';
+import ThemeSelector from './ThemeSelector';
 
 const Navbar = ({ onNewSession }) => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -59,6 +60,9 @@ const Navbar = ({ onNewSession }) => {
 
               <div className="h-6 w-px bg-white/10 hidden sm:block" />
 
+              {/* Theme Palette Switcher */}
+              <ThemeSelector />
+
               <div className="flex items-center space-x-3 pl-1">
                 <div className="hidden md:flex flex-col text-right">
                   <span className="text-xs font-semibold text-slate-200">{user?.name || 'Practitioner'}</span>
@@ -80,6 +84,7 @@ const Navbar = ({ onNewSession }) => {
             </>
           ) : (
             <div className="flex items-center space-x-3">
+              <ThemeSelector />
               <Link
                 to="/login"
                 className="text-xs font-medium text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors"
