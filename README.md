@@ -271,4 +271,4 @@ npm run dev
 ---
 
 ## 📄 License
-MIT © 2026 MediOmni AI Team.
+MIT © 2026 Prathmesh Vaidya
